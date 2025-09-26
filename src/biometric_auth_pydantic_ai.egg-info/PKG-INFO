@@ -1,0 +1,9 @@
+Metadata-Version: 2.4
+Name: biometric-auth-pydantic-ai
+Version: 0.1.0
+Summary: Biometric auth agentic system with Pydantic-AI + Gemini
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: pydantic>=2.11.9
+Requires-Dist: pydantic-ai>=1.0.10
+Requires-Dist: pydantic-ai-slim[google]>=1.0.10

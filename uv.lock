@@ -167,7 +167,7 @@ wheels = [
 [[package]]
 name = "biometric-auth-pydantic-ai"
 version = "0.1.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "pydantic" },
     { name = "pydantic-ai" },

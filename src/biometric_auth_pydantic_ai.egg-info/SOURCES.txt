@@ -1,0 +1,13 @@
+README.md
+pyproject.toml
+src/biometric_auth_pydantic_ai/__init__.py
+src/biometric_auth_pydantic_ai/agents.py
+src/biometric_auth_pydantic_ai/factory.py
+src/biometric_auth_pydantic_ai/main.py
+src/biometric_auth_pydantic_ai/models.py
+src/biometric_auth_pydantic_ai/router.py
+src/biometric_auth_pydantic_ai.egg-info/PKG-INFO
+src/biometric_auth_pydantic_ai.egg-info/SOURCES.txt
+src/biometric_auth_pydantic_ai.egg-info/dependency_links.txt
+src/biometric_auth_pydantic_ai.egg-info/requires.txt
+src/biometric_auth_pydantic_ai.egg-info/top_level.txt
