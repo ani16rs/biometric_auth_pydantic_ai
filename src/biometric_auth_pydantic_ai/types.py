@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import List
 
 class ModalityChoice(BaseModel):
     modality: str   # e.g. "voice", "face", "fingerprint", "iris", "password"
@@ -6,16 +7,15 @@ class ModalityChoice(BaseModel):
 class PipelinePlan(BaseModel):
     steps: list[str]
 
-# class BiometricTemplate(BaseModel):
-#     user_id: str
-#     modality: str   # "voice", "face", etc.
-#     features: list[float]
+class BiometricTemplate(BaseModel):
+    user_id: str
+    modality: str
+    features: List[float]
 
-# class BiometricSample(BaseModel):
-#     modality: str
-#     raw_data: str   # base64, filepath, etc.
+class BiometricSample(BaseModel):
+    modality: str
+    raw_data: str
 
 class MatchResult(BaseModel):
     match: bool
     score: float
-
