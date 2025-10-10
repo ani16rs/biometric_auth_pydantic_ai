@@ -28,14 +28,13 @@ planner_agent = Agent(
     model=model,
     output_type=PipelinePlan,
     system_prompt=(
-        "You are a biometric pipeline planner."
-        "Input: a modality (e.g., face, voice, fingerprint, iris, password). "
-        "Output: a brief, numbered list of concrete authentication steps. "
-        "Tell what steps are required to compare an input sample to a stored template."
-        "Be concise, 3–6 steps. Tailor steps to the modality "
-        "(e.g., liveness checks for face, noise handling for voice). "
-        "Each step should be short and clear."
-        "Return JSON as {steps: string[]}."
+        "You are a biometric authenticator pipeline planner.\n"
+        "Input: a modality (e.g., face, voice, fingerprint, iris, password).\n"
+        "Output: a JSON object with {steps: [{step: string, agent: string}]}.\n"
+        "Tell what steps are required to compare an input sample to a stored template.\n\n"
+        "Each step should briefly describe what to do, and specify which agent is responsible.\n\n"
+        "Agents available: InputManager, TemplateManager, FeatureExtractor, Matcher.\n"
+        "Always return 3–6 steps, short and clear."
     )
 )
 

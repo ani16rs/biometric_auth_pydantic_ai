@@ -2,10 +2,14 @@ from pydantic import BaseModel
 from typing import List
 
 class ModalityChoice(BaseModel):
-    modality: str   # e.g. "voice", "face", "fingerprint", "iris", "password"
+    modality: str   # "voice", "face", "fingerprint", "iris", "password"
+
+class PipelineStep(BaseModel):
+    step: str
+    agent: str
 
 class PipelinePlan(BaseModel):
-    steps: list[str]
+    steps: List[PipelineStep]
 
 class BiometricTemplate(BaseModel):
     user_id: str

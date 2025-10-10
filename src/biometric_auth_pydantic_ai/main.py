@@ -16,11 +16,14 @@ def run_demo():
 
     # Step 2: Decide what is needed
     plan = plan_pipeline(modality_choice.modality)
-    print("Pipeline steps:")
+    print("Pipeline steps and agents:")
     for i, step in enumerate(plan.steps, start=1):
-        print(f"{i}. {step}")
+        print(f"{i}. Agent: {step.agent} - {step.step} ")
+
     print("-" * 40)
 
+    # Step 3: Create agents
 
+    
 if __name__ == "__main__":
     run_demo()
