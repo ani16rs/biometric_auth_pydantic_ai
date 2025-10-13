@@ -55,3 +55,38 @@ class InputManager:
         # todo: load image or mock it
         print("[InputManager] Using mock face input (placeholder).")
         return BiometricSample(modality="face", raw_data="mock_face_image")
+
+class FeatureExtractor:
+    """
+    Converts raw input into comparable numeric features.
+    Each modality has its own extraction logic.
+    """
+
+    def extract(self, sample: BiometricSample) -> list[float]:
+        print(f"[FeatureExtractor] Extracting features from {sample.modality} input...")
+
+        if sample.modality == "password":
+            return self._extract_password(sample.raw_data)
+        elif sample.modality == "voice":
+            return self._extract_voice(sample.raw_data)
+        elif sample.modality == "face":
+            return self._extract_face(sample.raw_data)
+        else:
+            print(f"[FeatureExtractor] Using mock feature vector for unsupported modality: {sample.modality}")
+            return [random.random() for _ in range(4)]
+
+    # Modality-specific extraction
+    def _extract_password(self, raw_data: str) -> list[float]:
+        hashed = hashlib.sha256(raw_data.encode()).hexdigest()
+        features = [int(hashed[i:i+2], 16) / 255.0 for i in range(0, 32, 2)]
+        return features
+
+    def _extract_voice(self, raw_data: str) -> list[float]:
+        # todo: voice feature extraction
+        return [random.random() for _ in range(4)]
+
+    def _extract_face(self, raw_data: str) -> list[float]:
+        # todo: face embedding
+        return [random.random() for _ in range(4)]
+
+
