@@ -10,7 +10,7 @@ instr_list = [
 
 def run_demo():
     # Step 1: Natural language instruction
-    instruction = instr_list[0]
+    instruction = instr_list[2]
     modality_choice = choose_modality(instruction)
     print("Agent decided modality:", modality_choice.modality)
 
@@ -22,8 +22,13 @@ def run_demo():
 
     print("-" * 40)
 
-    # Step 3: Create agents
+    print(f"First to call: {plan.steps[0].agent}")
 
+    # Step 3: Create agents
+    # InputManager      finds input file
+    # TemplateManager   finds template file
+    # FeatureExtractor  performs FE from input
+    # Matcher           compares Finput with Ftemplate
     
 if __name__ == "__main__":
     run_demo()
