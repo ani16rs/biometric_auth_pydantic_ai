@@ -42,8 +42,10 @@ class InputManager:
                 data = f.read().strip()
             print(f"[InputManager] Loaded password from file: {path}")
         else:
-            data = "my_secure_password"  # mock password input
+            # data = "my_secure_password"
+            data = str(input("Enter password: "))           # mock password input
             print("[InputManager] Using mock password input.")
+        
         return BiometricSample(modality="password", raw_data=data)
 
     def _capture_voice(self, path: str | None = None) -> BiometricSample:
@@ -55,6 +57,39 @@ class InputManager:
         # todo: load image or mock it
         print("[InputManager] Using mock face input (placeholder).")
         return BiometricSample(modality="face", raw_data="mock_face_image")
+
+class TemplateManager:
+    """
+    Responsible for storing or retrieving enrolled (template) biometric data.
+    """
+
+    def fetch_template(self, user_id: str, modality: str) -> BiometricTemplate:
+        print(f"[TemplateManager] Fetching template for user '{user_id}' ({modality})...")
+
+        if modality == "password":
+            return self._template_password(user_id)
+        elif modality == "voice":
+            return self._template_voice(user_id)
+        elif modality == "face":
+            return self._template_face(user_id)
+        else:
+            print(f"[TemplateManager] Using mock template for unsupported modality: {modality}")
+            features = [random.random() for _ in range(4)]
+            return BiometricTemplate(user_id=user_id, modality=modality, features=features)
+
+    # Modality-specific templates
+    def _template_password(self, user_id: str) -> BiometricTemplate:
+        stored_hash = hashlib.sha256("my_secure_password".encode()).hexdigest()
+        features = [int(stored_hash[i:i+2], 16) / 255.0 for i in range(0, 32, 2)]
+        return BiometricTemplate(user_id=user_id, modality="password", features=features)
+
+    def _template_voice(self, user_id: str) -> BiometricTemplate:
+        features = [0.15, 0.22, 0.31, 0.44]
+        return BiometricTemplate(user_id=user_id, modality="voice", features=features)
+
+    def _template_face(self, user_id: str) -> BiometricTemplate:
+        features = [0.11, 0.28, 0.39, 0.47]
+        return BiometricTemplate(user_id=user_id, modality="face", features=features)
 
 class FeatureExtractor:
     """
@@ -90,3 +125,27 @@ class FeatureExtractor:
         return [random.random() for _ in range(4)]
 
 
+class Matcher:
+    """
+    Compares extracted features with the stored template and returns a similarity score.
+    """
+
+    def compare(self, template: BiometricTemplate, features: list[float]) -> MatchResult:
+        print(f"[Matcher] Comparing features for modality '{template.modality}'...")
+
+        dot = sum(t * s for t, s in zip(template.features, features))
+        norm_t = math.sqrt(sum(t * t for t in template.features))
+        norm_s = math.sqrt(sum(s * s for s in features))
+        score = dot / (norm_t * norm_s + 1e-8)
+
+        if template.modality == "password":
+            threshold = 0.95
+        else:
+            threshold = 0.8
+
+        match = score > threshold
+
+        print(f"[Matcher] Similarity score: {score:.3f}")
+        print(f"[Matcher] Match decision: {'MATCH' if match else 'NO MATCH'}")
+
+        return MatchResult(match=match, score=round(score, 3))

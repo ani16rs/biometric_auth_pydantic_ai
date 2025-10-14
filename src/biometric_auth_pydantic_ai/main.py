@@ -1,4 +1,10 @@
 from biometric_auth_pydantic_ai.services import choose_modality, plan_pipeline
+from biometric_auth_pydantic_ai.executors import (
+    InputManager,
+    FeatureExtractor,
+    TemplateManager,
+    Matcher,
+)
 
 instr_list = [
     "Compare my speech. Let me in ",
@@ -10,25 +16,37 @@ instr_list = [
 
 def run_demo():
     # Step 1: Natural language instruction
-    instruction = instr_list[2]
+    instruction = instr_list[4]
+    print(f"User instruction: {instruction}")
     modality_choice = choose_modality(instruction)
-    print("Agent decided modality:", modality_choice.modality)
+    print("\nAgent decided modality:", modality_choice.modality)
 
     # Step 2: Decide what is needed
     plan = plan_pipeline(modality_choice.modality)
-    print("Pipeline steps and agents:")
+    print("\nPipeline steps and agents:")
     for i, step in enumerate(plan.steps, start=1):
         print(f"{i}. Agent: {step.agent} - {step.step} ")
 
-    print("-" * 40)
-
-    print(f"First to call: {plan.steps[0].agent}")
+    print("-" * 50)
+    print("\n[Executing Pipeline Locally]")
 
     # Step 3: Create agents
-    # InputManager      finds input file
-    # TemplateManager   finds template file
-    # FeatureExtractor  performs FE from input
-    # Matcher           compares Finput with Ftemplate
+    input_mgr    = InputManager()
+    extractor    = FeatureExtractor()
+    template_mgr = TemplateManager()
+    matcher      = Matcher()
+
+    # Step 4: Run agents
+    sample   = input_mgr.capture_input(modality_choice.modality)
+    features = extractor.extract(sample)
+    template = template_mgr.fetch_template(user_id="alice", modality=modality_choice.modality)
+    result   = matcher.compare(template, features)
+
+    # Step 5: Final result
+    print("\n" + "-" * 50)
+    print(f"Authentication Result:")
+    print(f"Match: {result.match}, Score: {result.score}")
+    print("-" * 50)
     
 if __name__ == "__main__":
     run_demo()
