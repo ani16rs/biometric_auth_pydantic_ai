@@ -6,14 +6,18 @@
         operations for the POC.
 """
 
-import hashlib
-import random
-import math
 from biometric_auth_pydantic_ai.types import (
     BiometricTemplate,
     BiometricSample,
     MatchResult,
 )
+from dotenv import load_dotenv
+import hashlib
+import math
+import os
+import random
+
+load_dotenv()
 
 class InputManager:
     """
@@ -79,7 +83,8 @@ class TemplateManager:
 
     # Modality-specific templates
     def _template_password(self, user_id: str) -> BiometricTemplate:
-        stored_hash = hashlib.sha256("my_secure_password".encode()).hexdigest()
+        mock_password = os.getenv("MOCK_PASSWORD")
+        stored_hash = hashlib.sha256(mock_password.encode()).hexdigest()
         features = [int(stored_hash[i:i+2], 16) / 255.0 for i in range(0, 32, 2)]
         return BiometricTemplate(user_id=user_id, modality="password", features=features)
 

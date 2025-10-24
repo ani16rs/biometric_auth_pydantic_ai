@@ -1,3 +1,10 @@
+"""
+    File name: controller.py
+
+    Purpose:
+        Handler functions for agents.
+"""
+
 from .agents import modality_agent, planner_agent
 from .types import ModalityChoice, PipelinePlan
 

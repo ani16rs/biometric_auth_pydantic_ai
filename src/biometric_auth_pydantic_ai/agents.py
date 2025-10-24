@@ -1,3 +1,10 @@
+"""
+    File name: agents.py
+
+    Purpose:
+        Independent agents that are called by the Controller agent.
+"""
+
 from dotenv import load_dotenv
 import os
 from .types import PipelinePlan, ModalityChoice
@@ -36,19 +43,3 @@ planner_agent = Agent(
         "Always return 3–6 steps, short and clear."
     )
 )
-
-
-
-# def make_voice_matcher():
-#     return Agent(
-#         model=GoogleModel("gemini-1.5-flash", provider=provider),
-#         result_type=MatchResult,
-#         system_prompt="You are a voice matcher. Compare template vs sample and return {match: bool, score: float}."
-#     )
-
-# def make_face_matcher():
-#     return Agent(
-#         model=GoogleModel("gemini-1.5-flash", provider=provider),
-#         result_type=MatchResult,
-#         system_prompt="You are a face matcher. Compare template vs sample and return {match: bool, score: float}."
-#     )

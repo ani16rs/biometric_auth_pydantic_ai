@@ -1,3 +1,10 @@
+"""
+    File name: controller.py
+
+    Purpose:
+        Utility functions.
+"""
+
 import re
 
 def clean_up_result(result_output):

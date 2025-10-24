@@ -1,3 +1,10 @@
+"""
+    File name: types.py
+
+    Purpose:
+        Data types for biometric auth system.
+"""
+
 from pydantic import BaseModel
 from typing import List
 
