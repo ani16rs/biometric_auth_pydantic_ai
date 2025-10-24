@@ -13,17 +13,3 @@ def plan_pipeline(modality: str) -> PipelinePlan:
     """Generate a numbered list of steps for the given modality"""
     result = planner_agent.run_sync(f"Plan pipeline for {modality} authentication")
     return result.output
-
-# def get_matcher(modality: str):
-#     if modality == "voice":
-#         return make_voice_matcher()
-#     elif modality == "face":
-#         return make_face_matcher()
-#     else:
-#         raise ValueError(f"Unsupported modality: {modality}")
-
-# def run_authentication(template: BiometricTemplate, sample: BiometricSample):
-#     matcher = get_matcher(template.modality)
-#     return matcher.run(
-#         f"Compare template: {template.features} with sample data: {sample.raw_data}"
-#     )

@@ -63,10 +63,13 @@ def run_demo_controller():
         raw_output = clean_up_result(result.output)
         controller_data = json.loads(raw_output)
 
-        print("\nAgent decided modality:", controller_data["modality"])
-        print("Planned steps:")
+        # print("\nAgent decided modality:", controller_data["modality"])
+        print("\nPipeline steps executed:")
         for i, step in enumerate(controller_data["steps"], start=1):
             print(f"{i}. {step['agent']} - {step['step']}")
+            
+        print("\nAuthentication Result:")
+        print(f"Match: {controller_data['match']}, Score: {controller_data['score']}")
 
     except Exception as e:
         print("[Controller Error]", e)
