@@ -1,7 +1,6 @@
 from dotenv import load_dotenv
 import os
 from .types import PipelinePlan, ModalityChoice
-
 from pydantic_ai import Agent
 from pydantic_ai.models.google import GoogleModel
 from pydantic_ai.providers.google import GoogleProvider
@@ -19,7 +18,7 @@ modality_agent = Agent(
         "Given a user's natural-language request "
         "(e.g., 'I want to log in using my face'), "
         "decide the intended modality. "
-        "Valid options: voice, face, fingerprint, iris, password. "
+        "Valid options: voice, face, fingerprint, iris, password."
         "Always respond with JSON: {modality: string}."
     ),
 )

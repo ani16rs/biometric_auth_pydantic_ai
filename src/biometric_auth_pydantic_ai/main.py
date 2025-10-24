@@ -1,10 +1,13 @@
-from biometric_auth_pydantic_ai.services import choose_modality, plan_pipeline
+from biometric_auth_pydantic_ai.controller import controller_agent
 from biometric_auth_pydantic_ai.executors import (
     InputManager,
     FeatureExtractor,
     TemplateManager,
     Matcher,
 )
+from biometric_auth_pydantic_ai.services import choose_modality, plan_pipeline
+from biometric_auth_pydantic_ai.utils import clean_up_result
+import json
 
 instr_list = [
     "Compare my speech. Let me in ",
@@ -14,7 +17,7 @@ instr_list = [
     "I want to log in using my password",
 ]
 
-def run_demo():
+def run_demo_no_controller():
     # Step 1: Natural language instruction
     instruction = instr_list[4]
     print(f"User instruction: {instruction}")
@@ -47,6 +50,29 @@ def run_demo():
     print(f"Authentication Result:")
     print(f"Match: {result.match}, Score: {result.score}")
     print("-" * 50)
-    
+
+def run_demo_controller():
+    instruction = "I want to log in using my password"
+    print(f"User instruction: {instruction}")
+    print("\n[Controller Agent Running]")
+
+    try:
+        result = controller_agent.run_sync(instruction)
+        print("\n[Controller Output]")
+
+        raw_output = clean_up_result(result.output)
+        controller_data = json.loads(raw_output)
+
+        print("\nAgent decided modality:", controller_data["modality"])
+        print("Planned steps:")
+        for i, step in enumerate(controller_data["steps"], start=1):
+            print(f"{i}. {step['agent']} - {step['step']}")
+
+    except Exception as e:
+        print("[Controller Error]", e)
+        print("Gemini returned no final message — try rerunning or adjust system prompt.")
+
+
 if __name__ == "__main__":
-    run_demo()
+    # run_demo()
+    run_demo_controller()
