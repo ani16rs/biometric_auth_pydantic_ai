@@ -8,27 +8,46 @@ from biometric_auth_pydantic_ai.executors import (
 from biometric_auth_pydantic_ai.services import choose_modality, plan_pipeline
 from biometric_auth_pydantic_ai.utils import clean_up_result
 import json
+from pathlib import Path
+
+ROOT_DIR = Path(__file__).resolve().parents[2]
 
 instr_list = [
+    "I want to log in using my password",
+    "I want to log in using my fingerprint",
     "Compare my speech. Let me in ",
     "Scan my face. Let me in. ",
-    "I want to log in using my fingerprint",
     "I want to log in using my iris",
-    "I want to log in using my password",
 ]
 
 def run_demo_no_controller():
     # Step 1: Natural language instruction
-    instruction = instr_list[4]
+    instruction = instr_list[0]
     print(f"User instruction: {instruction}")
     modality_choice = choose_modality(instruction)
     print("\nAgent decided modality:", modality_choice.modality)
 
-    # Step 2: Decide what is needed
+    # Step 2: Execution plan
     plan = plan_pipeline(modality_choice.modality)
     print("\nPipeline steps and agents:")
     for i, step in enumerate(plan.steps, start=1):
         print(f"{i}. Agent: {step.agent} - {step.step} ")
+    
+    input_path = None
+    template_path = None
+    
+    if modality_choice.modality == "fingerprint":
+        input_path = ROOT_DIR / "images" / "img1-0.jpg"       # fp image from CS266 project
+        template_path = ROOT_DIR / "images" / "img1-1.jpg"    # fp image from CS266 project with a dash drawn in it
+        print("\nSame person. FPs from CS266 project. One normal, other with a dash.")
+        
+        # input_path = ROOT_DIR / "images" / "img2-0.png"        # fp image from nbis-rs test_data
+        # template_path = ROOT_DIR / "images" / "img2-1.png"     # fp image from nbis-rs test_data
+        # print("\nSame person. FPs from nbis test_data. Different captures.")
+
+        # input_path = ROOT_DIR / "images" / "img1-0.jpg"       # fp image from CS266 project
+        # template_path = ROOT_DIR / "images" / "img2-0.png"    # fp image from nbis-rs test_data
+        # print("\nDiff persons. FPs from nbis test_data.")
 
     print("-" * 50)
     print("\n[Executing Pipeline Locally]")
@@ -40,10 +59,18 @@ def run_demo_no_controller():
     matcher      = Matcher()
 
     # Step 4: Run agents
-    sample   = input_mgr.capture_input(modality_choice.modality)
+    sample   = input_mgr.capture_input(modality_choice.modality, path=input_path)
     features = extractor.extract(sample)
-    template = template_mgr.fetch_template(user_id="alice", modality=modality_choice.modality)
-    result   = matcher.compare(template, features)
+    template = template_mgr.fetch_template(
+        user_id = "alice", 
+        modality = modality_choice.modality,
+        path = template_path
+    )
+    result = matcher.compare(
+        modality = modality_choice.modality, 
+        template = template, 
+        sample_features = features
+    )
 
     # Step 5: Final result
     print("\n" + "-" * 50)
@@ -52,7 +79,7 @@ def run_demo_no_controller():
     print("-" * 50)
 
 def run_demo_controller():
-    instruction = "I want to log in using my password"
+    instruction = instr_list[0]
     print(f"User instruction: {instruction}")
     print("\n[Controller Agent Running]")
 
@@ -77,5 +104,5 @@ def run_demo_controller():
 
 
 if __name__ == "__main__":
-    # run_demo()
-    run_demo_controller()
+    run_demo_no_controller()
+    # run_demo_controller()

@@ -2,3 +2,7 @@
 # Byte-compiled / cache files
 __pycache__/
 *.py[cod]
+.DS_Store
+src/.DS_Store
+images/.DS_Store
+src/biometric_auth_pydantic_ai/.DS_Store
