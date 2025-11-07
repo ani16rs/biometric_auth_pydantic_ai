@@ -22,7 +22,6 @@ from biometric_auth_pydantic_ai.services import choose_modality, plan_pipeline
 from biometric_auth_pydantic_ai.types import (
     BiometricSample, 
     BiometricTemplate, 
-    ModalityChoice, 
     PipelinePlan
 )
 
@@ -53,7 +52,7 @@ controller_agent = Agent(
 )
 
 @controller_agent.tool
-def choose_modality_tool(ctx: RunContext) -> ModalityChoice:
+def choose_modality_tool(ctx: RunContext) -> str:
     """
     Decide the authentication modality from a user's natural instruction.
     """

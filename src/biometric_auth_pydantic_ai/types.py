@@ -9,9 +9,6 @@ from pydantic import BaseModel
 from typing import List
 from nbis.nbis import Minutiae
 
-class ModalityChoice(BaseModel):
-    modality: str   # "voice", "face", "fingerprint", "iris", "password"
-
 class PipelineStep(BaseModel):
     step: str
     agent: str

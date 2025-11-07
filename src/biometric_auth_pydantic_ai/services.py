@@ -6,9 +6,9 @@
 """
 
 from .agents import modality_agent, planner_agent
-from .types import ModalityChoice, PipelinePlan
+from .types import PipelinePlan
 
-def choose_modality(instruction: str) -> ModalityChoice:
+def choose_modality(instruction: str) -> str:
     """
     Decide the authentication modality from a natural-language instruction.
     """
