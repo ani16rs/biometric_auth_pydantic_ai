@@ -6,7 +6,7 @@ from biometric_auth_pydantic_ai.executors import (
     Matcher,
 )
 from biometric_auth_pydantic_ai.services import choose_modality, plan_pipeline
-from biometric_auth_pydantic_ai.utils import clean_up_result
+from biometric_auth_pydantic_ai.utils import clean_up_result, get_test_case
 import json
 from pathlib import Path
 
@@ -22,7 +22,7 @@ instr_list = [
 
 def run_demo_no_controller():
     # Step 1: Natural language instruction
-    instruction = instr_list[0]
+    instruction = instr_list[1]
     print(f"User instruction: {instruction}")
     modality_choice = choose_modality(instruction)
     print("\nAgent decided modality:", modality_choice.modality)
@@ -37,20 +37,9 @@ def run_demo_no_controller():
     template_path = None
     
     if modality_choice.modality == "fingerprint":
-        # Positive test
-        input_path = ROOT_DIR / "images" / "img1-0.jpg"       # fp image from CS266 project
-        template_path = ROOT_DIR / "images" / "img1-1.jpg"    # fp image from CS266 project with a dash drawn in it
-        print("\nSame person. FPs from CS266 project. One normal, other with a dash.")
-        
-        # Positive test
-        # input_path = ROOT_DIR / "images" / "img2-0.png"        # fp image from nbis-rs test_data
-        # template_path = ROOT_DIR / "images" / "img2-1.png"     # fp image from nbis-rs test_data
-        # print("\nSame person. FPs from nbis test_data. Different captures.")
-
-        # Negative test
-        # input_path = ROOT_DIR / "images" / "img1-0.jpg"       # fp image from CS266 project
-        # template_path = ROOT_DIR / "images" / "img2-0.png"    # fp image from nbis-rs test_data
-        # print("\nDiff persons. FPs from nbis test_data.")
+        input_path, template_path = get_test_case("positive1")
+        # input_path, template_path = get_test_case("positive2")
+        # input_path, template_path = get_test_case("negative1")
 
     print("-" * 50)
     print("\n[Executing Pipeline Locally]")
