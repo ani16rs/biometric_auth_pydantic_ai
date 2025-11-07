@@ -37,14 +37,17 @@ def run_demo_no_controller():
     template_path = None
     
     if modality_choice.modality == "fingerprint":
+        # Positive test
         input_path = ROOT_DIR / "images" / "img1-0.jpg"       # fp image from CS266 project
         template_path = ROOT_DIR / "images" / "img1-1.jpg"    # fp image from CS266 project with a dash drawn in it
         print("\nSame person. FPs from CS266 project. One normal, other with a dash.")
         
+        # Positive test
         # input_path = ROOT_DIR / "images" / "img2-0.png"        # fp image from nbis-rs test_data
         # template_path = ROOT_DIR / "images" / "img2-1.png"     # fp image from nbis-rs test_data
         # print("\nSame person. FPs from nbis test_data. Different captures.")
 
+        # Negative test
         # input_path = ROOT_DIR / "images" / "img1-0.jpg"       # fp image from CS266 project
         # template_path = ROOT_DIR / "images" / "img2-0.png"    # fp image from nbis-rs test_data
         # print("\nDiff persons. FPs from nbis test_data.")

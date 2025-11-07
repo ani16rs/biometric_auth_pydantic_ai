@@ -20,8 +20,8 @@ import nbis
 from nbis import NbisExtractor, NbisExtractorSettings
 
 load_dotenv()
-PASSWORD_THRESHOLD = 1
-FINGERPRINT_THRESHOLD = 50
+PASSWORD_THRESHOLD = float(os.getenv("PASSWORD_THRESHOLD", "0.9"))
+FINGERPRINT_THRESHOLD = float(os.getenv("FINGERPRINT_THRESHOLD", "50"))
 
 # Configuration for the NbisExtractor
 extractor_settings = NbisExtractorSettings(
@@ -70,7 +70,7 @@ class TemplateManager:
     Responsible for storing or retrieving enrolled (template) biometric data.
     """
 
-    def fetch_template(self, user_id: str, modality: str, path: str) -> BiometricTemplate:
+    def fetch_template(self, user_id: str, modality: str, path: str | None) -> BiometricTemplate:
         print(f"[TemplateManager] Fetching template for user '{user_id}' ({modality})...")
 
         if modality == "password":
@@ -89,7 +89,7 @@ class TemplateManager:
         features = [int(stored_hash[i:i+2], 16) / 255.0 for i in range(0, 32, 2)]
         return BiometricTemplate(user_id=user_id, modality="password", features=features)
 
-    def _template_fingerprint(self, user_id: str, path: str) -> BiometricTemplate:
+    def _template_fingerprint(self, user_id: str, path: str | None) -> BiometricTemplate:
         image_bytes = open(path, "rb").read()       # Read the bytes from a file
         feature_extractor = nbis.new_nbis_extractor(extractor_settings)
         minutiae_obj = feature_extractor.extract_minutiae(image_bytes)
@@ -101,7 +101,7 @@ class FeatureExtractor:
     Each modality has its own extraction logic.
     """
 
-    def extract(self, sample: BiometricSample) -> list[float]:
+    def extract(self, sample: BiometricSample):
         print(f"[FeatureExtractor] Extracting features from {sample.modality} input...")
 
         if sample.modality == "password":
@@ -116,12 +116,12 @@ class FeatureExtractor:
     def _extract_password(self, raw_data: str) -> list[float]:
         hashed = hashlib.sha256(raw_data.encode()).hexdigest()
         features = [int(hashed[i:i+2], 16) / 255.0 for i in range(0, 32, 2)]
-        return features
+        return features             # list
 
-    def _extract_fingerprint(self, raw_data) -> list[float]:
+    def _extract_fingerprint(self, raw_data):
         feature_extractor = nbis.new_nbis_extractor(extractor_settings)
         minutiae_obj = feature_extractor.extract_minutiae(raw_data)
-        return minutiae_obj
+        return minutiae_obj         # NBIS Minutae
 
 
 class Matcher:
@@ -130,7 +130,8 @@ class Matcher:
     """
 
     def compare(self, modality: str, template: BiometricTemplate, sample_features) -> MatchResult:
-        print(f"[Matcher] Comparing features for modality '{template.modality}'...")
+        print(f"[Matcher] Comparing features for modality '{modality}'...")
+
         if modality == "password":
             return self._compare_password(template, sample_features)
         elif modality == "fingerprint":
